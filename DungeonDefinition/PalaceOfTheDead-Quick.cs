@@ -70,7 +70,7 @@ namespace DeepCombined.DungeonDefinition
                 case GameObjectType.BattleNpc:
                     weight /= 2;
                     if ((obj as BattleCharacter).IsTargetingMyPartyMember())
-                        weight += 100;
+                        weight += 999;
                     break;
                 case GameObjectType.Treasure:
                     //weight += 10;

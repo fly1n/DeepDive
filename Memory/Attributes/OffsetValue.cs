@@ -7,10 +7,9 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System;
 
-namespace DeepCombined.Memory.Attributes
+namespace Deep.Memory.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     internal class OffsetValueNA : Attribute

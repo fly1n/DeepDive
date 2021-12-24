@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DeepCombined.Properties {
+namespace Deep.Properties {
     using System;
     
     
@@ -19,7 +19,7 @@ namespace DeepCombined.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -39,7 +39,7 @@ namespace DeepCombined.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeepCombined.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Deep.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -377,15 +377,6 @@ namespace DeepCombined.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {&quot;7350862&quot;:[{&quot;X&quot;:-352.0957,&quot;Y&quot;:5.27548361,&quot;Z&quot;:225.96875},{&quot;X&quot;:-356.9492,&quot;Y&quot;:-0.09747314,&quot;Z&quot;:225.6719},{&quot;X&quot;:-347.2422,&quot;Y&quot;:10.64844,&quot;Z&quot;:226.2656}],&quot;7350897&quot;:[{&quot;X&quot;:-370.03125,&quot;Y&quot;:5.27548361,&quot;Z&quot;:244.0957},{&quot;X&quot;:-370.3281,&quot;Y&quot;:-0.09747314,&quot;Z&quot;:239.2422},{&quot;X&quot;:-369.7344,&quot;Y&quot;:10.64844,&quot;Z&quot;:248.9492}],&quot;7350899&quot;:[{&quot;X&quot;:-351.9043,&quot;Y&quot;:5.27548361,&quot;Z&quot;:262.03125},{&quot;X&quot;:-356.7578,&quot;Y&quot;:-0.09747314,&quot;Z&quot;:261.7344},{&quot;X&quot;:-347.0508,&quot;Y&quot;:10.64844,&quot;Z&quot;:262.3281}],&quot;7350900&quot;:[{&quot;X&quot;:-364.0957,&quot;Y&quot;:5.27548361,&quot;Z&quot;:281.96875},{&quot;X&quot;:-368.9492,&quot;Y&quot;:-0.0 [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string _770 {
-            get {
-                return ResourceManager.GetString("_770", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {
         ///  &quot;6434642&quot;: [
         ///    {
@@ -479,44 +470,6 @@ namespace DeepCombined.Properties {
         public static string BitFieldsNotSupported {
             get {
                 return ResourceManager.GetString("BitFieldsNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///  {
-        ///    &quot;Index&quot;: 1,
-        ///    &quot;Name&quot;: &quot;the Palace of the Dead&quot;,
-        ///    &quot;NameWithoutArticle&quot;: &quot;Palace of the Dead&quot;,
-        ///    &quot;ContentFinderId&quot;: 174,
-        ///    &quot;PomanderMapping&quot;: {
-        ///      &quot;1&quot;: 0,
-        ///      &quot;2&quot;: 1,
-        ///      &quot;3&quot;: 2,
-        ///      &quot;4&quot;: 3,
-        ///      &quot;5&quot;: 4,
-        ///      &quot;6&quot;: 5,
-        ///      &quot;7&quot;: 6,
-        ///      &quot;8&quot;: 7,
-        ///      &quot;9&quot;: 8,
-        ///      &quot;10&quot;: 9,
-        ///      &quot;11&quot;: 10,
-        ///      &quot;12&quot;: 11,
-        ///      &quot;13&quot;: 12,
-        ///      &quot;14&quot;: 13,
-        ///      &quot;15&quot;: 14,
-        ///      &quot;16&quot;: 15
-        ///    },
-        ///    &quot;LobbyId&quot;: 570,
-        ///    &quot;UnlockQuest&quot;: 67092,
-        ///    &quot;Npc&quot;: {
-        ///      &quot;Location&quot;: [
-        ///        187.548584,
-        ///        7 [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string DeepDungeonData {
-            get {
-                return ResourceManager.GetString("DeepDungeonData", resourceCulture);
             }
         }
         

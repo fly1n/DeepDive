@@ -149,9 +149,17 @@ namespace DeepCombined.DungeonDefinition
                 case GameObjectType.BattleNpc:
                     weight /= 2;
                     if ((obj as BattleCharacter).IsTargetingMyPartyMember())
-                        weight += 100;
+                        weight += 999;
                     break;
                 case GameObjectType.Treasure:
+                    if (obj.NpcId == EntityNames.SilverCoffer)
+                    {
+                        weight += 150;
+                        if (FloorExit.location != Vector3.Zero)
+                            weight -= Core.Me.DistanceSqr(Vector3.Lerp(obj.Location, FloorExit.location, 0.25f));
+                        else
+                            weight -= obj.DistanceSqr();
+                    }
                     //weight += 10;
                     break;
             }
@@ -193,8 +201,18 @@ namespace DeepCombined.DungeonDefinition
 
                 case GameObjectType.BattleNpc:
                     weight /= 2;
+                    if ((obj as BattleCharacter).IsTargetingMyPartyMember())
+                        weight += 999;
                     break;
                 case GameObjectType.Treasure:
+                    if (obj.NpcId == EntityNames.SilverCoffer)
+                    {
+                        weight += 150;
+                        if (FloorExit.location != Vector3.Zero)
+                            weight -= Core.Me.DistanceSqr(Vector3.Lerp(obj.Location, FloorExit.location, 0.25f));
+                        else
+                            weight -= obj.DistanceSqr();
+                    }
                     break;
             }
 
@@ -227,7 +245,7 @@ namespace DeepCombined.DungeonDefinition
                             break;
                         }
                         
-                        if (!DeepDungeonManager.PortalActive && FloorExit.location != Vector3.Zero)
+                        if ((!DeepDungeonManager.PortalActive && FloorExit.location != Vector3.Zero) || obj.NpcId == EntityNames.SilverCoffer)
                             result.Add(obj);
                         
                         break;

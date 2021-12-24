@@ -7,18 +7,19 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
+using Deep.Logging;
+using Deep.Providers;
+using Deep.Structure;
 using System;
 using System.Windows.Forms;
-using DeepCombined.Helpers.Logging;
-using DeepCombined.Structure;
 
-namespace DeepCombined.Forms
+namespace Deep.Forms
 {
     public partial class SettingsForm : Form
     {
         public SettingsForm()
         {
+            
             InitializeComponent();
         }
 
@@ -32,9 +33,10 @@ namespace DeepCombined.Forms
             solostop.Checked = !Settings.Instance.SoloStop;
 
             solostop.CheckedChanged += solostop_CheckStateChanged;
+
         }
 
-        private void SettingsForm_Closed(object sender, FormClosedEventArgs e)
+        private void SettingsForm_Closed(object sender, FormClosedEventArgs e) 
         {
             Levels.SelectedIndexChanged -= changelevel;
             solostop.CheckedChanged -= solostop_CheckStateChanged;
@@ -42,13 +44,13 @@ namespace DeepCombined.Forms
 
         private void changelevel(object sender, EventArgs e)
         {
-            Logger.Verbose("Changing the selected floor to run");
-            Settings.Instance.SelectedLevel = (FloorSetting) Levels.SelectedItem;
+            Logger.Verbose($"Changing the selected floor to run");
+            Settings.Instance.SelectedLevel = (FloorSetting)Levels.SelectedItem;
         }
 
         private void solostop_CheckStateChanged(object sender, EventArgs e)
         {
-            Logger.Verbose("Changing stop state");
+            Logger.Verbose($"Changing stop state");
             Settings.Instance.SoloStop = !Settings.Instance.SoloStop;
         }
     }

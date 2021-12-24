@@ -7,12 +7,11 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System.Linq;
 using ff14bot;
 using ff14bot.Objects;
 
-namespace DeepCombined.Helpers
+namespace Deep.Helpers
 {
     internal static class GameObjectExtensions
     {
@@ -21,17 +20,18 @@ namespace DeepCombined.Helpers
             var character = obj as Character;
             if (character != null && character.IsValid)
             {
-                var source = castbyme
-                    ? from r in character.CharacterAuras
-                      where r.CasterId == Core.Me.ObjectId && r.Id == auraId
-                      select r
-                    : character.CharacterAuras.Where(r => r.Id == auraId);
+                var source = castbyme ? (from r in character.CharacterAuras
+                                          where r.CasterId == Core.Me.ObjectId && r.Id == auraId
+                                          select r) : character.CharacterAuras.Where((Aura r) => r.Id == auraId);
                 if (!checkTime)
+                {
                     if (source.Any(aura => aura.TimespanLeft.TotalMilliseconds < 0.0))
+                    {
                         return false;
+                    }
+                }
                 return source.Any(aura => aura.TimespanLeft.TotalMilliseconds >= timeLeft);
             }
-
             return false;
         }
 
@@ -42,10 +42,8 @@ namespace DeepCombined.Helpers
                 if (c.HasAura(id))
                     return true;
             }
-
             return false;
         }
-
         internal static uint MissingHealth(this GameObject player)
         {
             return player.MaxHealth - player.CurrentHealth;

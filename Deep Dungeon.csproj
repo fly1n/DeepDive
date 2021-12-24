@@ -97,7 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants_ext.cs" />
-    <Compile Include="DeepTest.cs" />
+    <Compile Include="DeepTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="DeepTest.Designer.cs" />
     <Compile Include="DungeonDefinition\Base\DeepDungeonData.cs" />
     <Compile Include="DungeonDefinition\Base\DeepDungeonDecorator.cs" />
@@ -143,12 +145,14 @@
     <Compile Include="TaskManager\Actions\DeathWindowHandler.cs" />
     <Compile Include="TaskManager\Actions\FloorExit.cs" />
     <Compile Include="TaskManager\Actions\GetToCaptain.cs" />
+    <Compile Include="TaskManager\Actions\HealHandler.cs" />
     <Compile Include="TaskManager\Actions\LoadingHandler.cs" />
     <Compile Include="TaskManager\Actions\LobbyHandler.cs" />
     <Compile Include="TaskManager\Actions\Loot.cs" />
     <Compile Include="TaskManager\Actions\Pomanders.cs" />
     <Compile Include="TaskManager\Actions\POTDEntrance.cs" />
     <Compile Include="TaskManager\Actions\POTDNavigation.cs" />
+    <Compile Include="TaskManager\Actions\Reset.cs" />
     <Compile Include="TaskManager\Actions\SidestepTask.cs" />
     <Compile Include="TaskManager\Actions\StuckDetection.cs" />
     <Compile Include="TaskManager\Actions\TrapHandler.cs" />

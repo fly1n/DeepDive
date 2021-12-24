@@ -7,13 +7,14 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Clio.Utilities;
-using DeepCombined.Helpers;
-using DeepCombined.Helpers.Logging;
+using Deep.Helpers;
+using Deep.Memory;
 using ff14bot;
 using ff14bot.Enums;
 using ff14bot.Helpers;
@@ -21,24 +22,18 @@ using ff14bot.Managers;
 using ff14bot.NeoProfiles;
 using ff14bot.Objects;
 
-namespace DeepCombined.Providers
+namespace Deep.Providers
 {
     // ReSharper disable once InconsistentNaming
     internal class DDCombatTargetingProvider : ITargetingProvider
     {
-        private int _level;
         private Vector3 _location;
+        private int _level;
         private GameObject _targetObject;
 
         internal IEnumerable<BattleCharacter> Targets { get; private set; }
-
         public List<BattleCharacter> GetObjectsByWeight()
         {
-            if (!DutyManager.InInstance)
-                return new List<BattleCharacter>();
-
-            if (DeepDungeonManager.Director.TimeLeftInDungeon == TimeSpan.Zero)
-                return new List<BattleCharacter>();
             //Set some variables here that will get called often so memory reads only need to be performed one time
             var player = Core.Me;
             _location = player.Location;
@@ -54,60 +49,63 @@ namespace DeepCombined.Providers
             var portalActive = DeepDungeonManager.PortalActive;
 
 
-             //.ToArray();
+            var units = GameObjectManager.GetObjectsOfType<BattleCharacter>();//.ToArray();
 
-            using (new PerformanceLogger($"targeting",true))
-            {
-                //var units = GameObjectManager.GetObjectsOfType<BattleCharacter>();
-                
-                var inDD = Constants.InDeepDungeon;
-                
-                var _Targets = new List<BattleCharacter>();
+            //using (new PerformanceTimer("targeting " + units.Length))
+            //{
 
-                foreach (var target1 in GameObjectManager.GameObjects)
+            var inDD = Constants.InDeepDungeon;
+            Targets = units
+                .Where(target =>
                 {
-                    if (target1.Type != GameObjectType.BattleNpc)
-                        continue;
-
-                    var target = (BattleCharacter) target1;
                     var targetNpcId = target.NpcId;
-                    
                     if (targetNpcId == 5042 || targetNpcId == 0)
-                        continue;
-                    
-                    if (target.IsDead)
-                        continue;
-                    
-                    if (Constants.TrapIds.Contains(targetNpcId) || Constants.IgnoreEntity.Contains(targetNpcId))
-                        continue;
+                        return false;
 
                     var targetInCombat = target.InCombat;
 
-                    if (inDD && Blacklist.Contains(target) && !targetInCombat)
-                        continue;
+                    if (inDD && (Blacklist.Contains(target) && !targetInCombat))
+                        return false;
+
+                    if (Constants.TrapIds.Contains(targetNpcId) || Constants.IgnoreEntity.Contains(targetNpcId))
+                        return false;
 
                     if (!target.IsTargetable)
-                        continue;
+                        return false;
 
-                    if (portalActive && !targetInCombat && targetNpcId != Mobs.PalaceHornet)
+                    if (portalActive && !targetInCombat)
                     {
-                        continue;
+                        var targetLevel = target.ClassLevel;
+                        if (_level - targetLevel >= 3)
+                        {
+                            return false;
+                        }
                     }
 
-                    if (!target.StatusFlags.HasFlag(StatusFlags.Hostile)) continue;
-                    
-                    if (bossFloor)
-                        _Targets.Add(target);
+                    if (target.IsDead) 
+                        return false;
 
-                    if (!(target.Location.Distance2DSqr(_location) < combatReach)) continue;
-                    
-                    if (targetInCombat || target.InLineOfSight())
-                        _Targets.Add((target));
+                    if (target.StatusFlags.HasFlag(StatusFlags.Hostile))
+                    {
+                        if (bossFloor)
+                            return true;
 
-                }
+                        if (target.Location.Distance2DSqr(_location) < combatReach)
+                        {
+                            return targetInCombat || target.InLineOfSight();
+                        }
+                    }
 
-                return _Targets.OrderByDescending(Priority).ToList();
-            }
+                    return false;
+                });
+
+
+
+
+            return Targets.OrderByDescending(Priority).ToList();
+            //}
+
+
         }
 
         private double Priority(BattleCharacter battleCharacter)
@@ -116,22 +114,15 @@ namespace DeepCombined.Providers
             var distance2D = battleCharacter.Distance2D(_location);
 
             weight -= distance2D / 2.25;
-            weight += battleCharacter.ClassLevel / 1.25;
-            weight += 100 - battleCharacter.CurrentHealthPercent;
-            
-            var battleCharacterInCombat = battleCharacter.InCombat;
-            
-            if ((battleCharacter.NpcId == Mobs.PalaceHornet || battleCharacter.NpcId == Mobs.PalaceSlime) && battleCharacterInCombat)
-                return weight * 100.0;
 
-            if (PartyManager.IsInParty && !PartyManager.IsPartyLeader)
-                if (battleCharacter.IsTargetingMyPartyMember())
-                    weight += 100;
+            weight += battleCharacter.ClassLevel / 1.25;
+
+            weight += 100 - battleCharacter.CurrentHealthPercent;
 
             if (battleCharacter.HasTarget && battleCharacter.TargetCharacter == Core.Me)
                 weight += 50;
 
-            
+            var battleCharacterInCombat = battleCharacter.InCombat;
 
             if (!battleCharacterInCombat)
                 weight -= 5;
@@ -147,7 +138,8 @@ namespace DeepCombined.Providers
             if (distance2D > 25)
                 weight /= 2;
 
-            
+            if ((battleCharacter.NpcId == Mobs.PalaceHornet || battleCharacter.NpcId == Mobs.PalaceSlime) && battleCharacterInCombat)
+                return weight * 100.0;
 
 
             return weight;

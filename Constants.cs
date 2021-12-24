@@ -7,163 +7,164 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Clio.Utilities;
-using DeepCombined.Helpers;
-using DeepCombined.Memory;
-using DeepCombined.Properties;
+using Deep.Helpers;
+using Deep.Logging;
+using Deep.Memory;
 using ff14bot;
 using ff14bot.Enums;
 using ff14bot.Managers;
-using ff14bot.RemoteAgents;
 using Newtonsoft.Json;
+using Deep.Properties;
+using ff14bot.RemoteAgents;
 
-namespace DeepCombined
+namespace Deep
 {
+    
     public static class PoiTypes
     {
+
         public const int ExplorePOI = 9;
-        public const int UseCairnOfReturn = 10;
+        public const int UseCarnOfReturn = 10;
+
     }
 
     /// <summary>
-    ///     Notable mobs in Deep Dungeon
+    /// Notable mobs in Deep Dungeon
     /// </summary>
-    internal static partial class Mobs
+    internal static class Mobs
     {
-        internal const uint PalaceHornet = 4981;
-        internal const uint PalaceSlime = 4990;
+        internal static uint PalaceHornet = 4981;
+        internal static uint PalaceSlime = 4990;
     }
 
     /// <summary>
-    ///     Various entity Ids present in Deep Dungeon
+    /// Various entity Ids present in Deep Dungeon
     /// </summary>
     internal static class EntityNames
     {
-        internal const uint TrapCoffer = 2005808;
-        internal const uint GoldCoffer = 2007358;
-        internal const uint SilverCoffer = 2007357;
+        internal static uint TrapCoffer = 2005808;
+        internal static uint GoldCoffer = 2007358;
+        internal static uint SilverCoffer = 2007357;
 
-        internal const uint Hidden = 2007542;
-        internal const uint BandedCoffer = 2007543;
+        internal static uint[] MimicCoffer = {2006020, 2006022};
 
-        internal static readonly uint[] MimicCoffer = {2006020, 2006022};
+        internal static uint Hidden = 2007542;
+        internal static uint BandedCoffer = 2007543;
 
-        internal static uint OfPassage => Constants.SelectedDungeon.OfPassage;
-        internal static uint OfReturn => Constants.SelectedDungeon.OfReturn;
-        internal static uint BossExit => Constants.SelectedDungeon.BossExit;
-        internal static uint LobbyExit => Constants.SelectedDungeon.LobbyExit;
-        internal static uint LobbyEntrance => Constants.SelectedDungeon.LobbyEntrance;
+        internal static uint FloorExit = 2007188;
+        internal static uint BossExit = 2005809;
 
+        internal static uint LobbyExit = 2006016;
+        internal static uint LobbyEntrance = 2006012;
+
+        internal static uint CairnofReturn = 2007187;
 
         #region Pets
 
-        internal const uint RubyCarby = 5478;
+        internal static uint RubyCarby = 5478;
 
-        internal const uint Garuda = 1404;
-        internal const uint TopazCarby = 1400;
-        internal const uint EmeraldCarby = 1401;
-        internal const uint Titan = 1403;
-        internal const uint Ifrit = 1402;
+        internal static uint Garuda = 1404;
+        internal static uint TopazCarby = 1400;
+        internal static uint EmeraldCarby = 1401;
+        internal static uint Titan = 1403;
+        internal static uint Ifrit = 1402;
 
-        internal const uint Eos = 1398;
-        internal const uint Selene = 1399;
+        internal static uint Eos = 1398;
+        internal static uint Selene = 1399;
 
-        internal const uint Rook = 3666;
-        internal const uint Bishop = 3667;
+        internal static uint Rook = 3666;
+        internal static uint Bishop = 3667;
 
         #endregion
     }
 
     internal static class Items
     {
-        internal const int Antidote = 4564;
-        internal const int EchoDrops = 4566;
-        internal static int SustainingPotion => Constants.SelectedDungeon.SustainingPotion;
+        internal static int Antidote = 4564;
+        internal static int EchoDrops = 4566;
+        internal static int SustainingPotion = 20309;
     }
 
-    internal static partial class Auras
+    internal static class Auras
     {
-        internal const uint Odder = 1546;
-        internal const uint Frog = 1101;
-        internal const uint Toad = 439;
-        internal const uint Toad2 = 441;
-        internal const uint Chicken = 1102;
-        internal const uint Imp = 1103;
+        internal static uint Frog = 1101;
+        internal static uint Toad = 439;
+        internal static uint Toad2 = 441;
+        internal static uint Chicken = 1102;
+        internal static uint Imp = 1103;
 
+        internal static uint Lust = 565;
+        internal static uint Rage = 565;
 
-        internal const uint Lust = 565;
-        internal const uint Rage = 565;
+        internal static uint Steel = 1100;
+        internal static uint Strength = 687;
 
-        internal const uint Steel = 1100;
-        internal const uint Strength = 687;
-
-        internal const uint Sustain = 184;
-
-        internal const uint Enervation = 546;
-        internal const uint Pacification = 620;
-        internal const uint Silence = 7;
-
-
-        public static readonly uint[] Poisons =
-        {
-            18, 275, 559, 560, 686, 801
-        };
+        internal static uint Sustain = 184;
 
         #region Floor Debuffs
 
-        internal const uint Pox = 1087;
-        internal const uint Blind = 1088;
-        internal const uint HpDown = 1089;
-        internal const uint DamageDown = 1090;
-        internal const uint Amnesia = 1092;
-        internal const uint UnMagicked = 1549;
+        internal static uint Pox = 1087;
+        internal static uint Blind = 1088;
+        internal static uint HpDown = 1089;
+        internal static uint DamageDown = 1090;
+        internal static uint Amnesia = 1092;
 
-        internal const uint ItemPenalty = 1094;
-        internal const uint SprintPenalty = 1095;
+        internal static uint ItemPenalty = 1094;
+        internal static uint SprintPenalty = 1095;
 
-        internal const uint KnockbackPenalty = 1096;
-        internal const uint NoAutoHeal = 1097;
+        internal static uint KnockbackPenalty = 1096;
+        internal static uint NoAutoHeal = 1097;
 
         #endregion
+
+        public static uint Enervation = 546;
+        public static uint Pacification = 620;
+        public static uint Silence = 7;
+
+
+        public static uint[] Poisons = {
+            18, 275, 559, 560, 686, 801
+        };
     }
 
     internal static class Spells
     {
-        internal const uint LustSpell = 6274;
-        internal const uint RageSpell = 6273;
-        internal const uint ResolutionSpell = 6871;
+        internal static uint LustSpell = 6274;
+        internal static uint RageSpell = 6273;
+        internal static uint ResolutionSpell = 6871;
     }
 
     internal static class WindowNames
     {
-        internal const string DDmenu = "DeepDungeonMenu";
-        internal const string DDsave = "DeepDungeonSaveData";
-        internal const string DDmap = "DeepDungeonMap";
-        internal const string DDStatus = "DeepDungeonStatus";
-        internal const string DDResult = "DeepDungeonResult";
+        internal static string DDmenu = "DeepDungeonMenu";
+        internal static string DDsave = "DeepDungeonSaveData";
+        internal static string DDmap = "DeepDungeonMap";
+        internal static string DDStatus = "DeepDungeonStatus";
     }
 
     internal class Potion
     {
-        private float[] HPs;
-
-        [JsonProperty("Id")] public uint Id;
-
-        private Item[] ItemData;
-
-        [JsonProperty("Level")] public uint Level;
-
-        [JsonProperty("Max")] public uint[] Max;
-
-        [JsonProperty("Rate")] public float[] Rate;
+        [JsonProperty("Id")]
+        public uint Id;
+        
+        [JsonProperty("Level")]
+        public uint Level;
+        
+        [JsonProperty("Rate")]
+        public float[] Rate;
+        
+        [JsonProperty("Max")]
+        public uint[] Max;
 
         public float RecoverMax => Core.Me.MaxHealth * Rate[1];
-        public uint Recovery => (uint) Math.Min(RecoverMax, Max[1]);
+        public uint Recovery => (uint)Math.Min(RecoverMax, Max[1]);
 
         public float LevelScore => Max[1] / RecoverMax;
 
@@ -183,120 +184,124 @@ namespace DeepCombined
 
 
             //Logger.Info($"{ItemData[hq ? 1 : 0]}  has a effective HPS of {effectiveMax / cooldown}");
-            return effectiveMax / cooldown;
+            return  effectiveMax / cooldown;
         }
+
+        private Item[] ItemData;
+        private float[] HPs;
 
         internal void Setup()
         {
             ItemData = new Item[2]
             {
-                DataManager.GetItem(Id),
+                DataManager.GetItem(Id, false),
                 DataManager.GetItem(Id, true)
             };
 
             HPs = new[]
             {
-                Max[0] / (float) ItemData[0].Cooldown,
-                Max[1] / (float) ItemData[1].Cooldown
+                Max[0] / (float)ItemData[0].Cooldown,
+                Max[1] / (float)ItemData[1].Cooldown,
             };
+
         }
     }
 
 
-    internal static partial class Constants
+    internal static class Constants
     {
-        //2002872 = some random thing that the bot tries to target in boss rooms. actual purpose unknown
-        internal static uint[] BaseIgnoreEntity =
-        {
-            5042, 5402, 2002872, EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda,
-            EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook,
-            EntityNames.Bishop
-        };
-
-        internal static uint MapVersion = 4;
-
-        internal static Language Lang;
-
-        internal static uint[] IgnoreEntity;
-
         static Constants()
         {
+            Maps = new Dictionary<uint, uint>
+                    {
+                        //mapid - wall file
+                      {561, 1 },
+                      {562, 2},
+                      {563, 3},
+                      {564, 4},
+                      {565, 4},
+                      {593, 5},
+                      {594, 5},
+                      {595, 5},
+                      {596, 6},
+                      {597, 6},
+                      {598, 6},
+                      {599, 8},
+                      {600, 8},
+                      {601, 9},
+                      {602, 9},
+                      {603, 7},
+                      {604, 7},
+                      {605, 7},
+                      {606, 7},
+                      {607, 7}
+                    };
+
+            DeepDungeonRawIds = Maps.Keys.ToArray();
+
+
+
+
+
+
+
             Pots = loadResource<Potion[]>(Resources.pots).ToDictionary(r => r.Id, r => r);
             foreach (var pot in Pots)
             {
                 PotionIds.Add(pot.Key);
                 pot.Value.Setup();
             }
+
         }
-
-        internal static Vector3 EntranceNpcPosition => SelectedDungeon.CaptainNpcPosition;
-        internal static uint EntranceNpcId => SelectedDungeon.CaptainNpcId;
-        internal static uint AetheryteId => SelectedDungeon.EntranceAetheryte;
-        internal static AetheryteResult EntranceZone => DataManager.AetheryteCache[AetheryteId];
-        internal static uint EntranceZoneId => EntranceZone.ZoneId;
-        internal static IEnumerable<uint> DeepDungeonRawIds => SelectedDungeon.DeepDungeonRawIds;
-
-        internal static IEnumerable<uint> Exits =>
-            new[] {EntityNames.OfPassage, EntityNames.BossExit, EntityNames.LobbyExit};
-
         /// <summary>
-        ///     returns true if we are in any of the Deep Dungeon areas.
+        /// returns true if we are in any of the Deep Dungeon areas.
         /// </summary>
         internal static bool InDeepDungeon => DeepDungeonRawIds.Contains(WorldManager.ZoneId);
 
         /// <summary>
-        ///     Pull range (Max of 15 to stop from attacking around corners on classes with large pull ranges)
+        /// Pull range (minimum of 8)
         /// </summary>
         internal static float ModifiedCombatReach
         {
             get
             {
-                if (Core.Me.CurrentJob.IsMelee())
-                    return Math.Max(12, RoutineManager.Current.PullRange + Core.Me.CombatReach);
-                
-                return Math.Min(15, RoutineManager.Current.PullRange + Core.Me.CombatReach);
+                if (!PartyManager.IsInParty)
+                    return 17;
+                return Math.Max(8, RoutineManager.Current.PullRange + Settings.Instance.PullRange);
             }
         }
 
-        //cn = 3
-        //64 = 2
-        //32 = 1
-        internal static AgentDeepDungeonSaveData GetSaveInterface()
-        {
-            return AgentModule.GetAgentInterfaceByType<AgentDeepDungeonSaveData>();
-        }
+        internal static Vector3 CaptainNpcPosition = new Vector3(187.5486f, 7.238432f, -39.26154f);
+        internal static uint CaptainNpcId = 1017323;
 
-        public static void INIT()
-        {
-            var field = (Language) typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic)
-                .First(i => i.FieldType == typeof(Language)).GetValue(null);
+        internal static uint SouthShroudZoneId = 153;
 
-            Lang = field;
-
-            OffsetManager.Init();
-        }
+        //570 is staging.
+        //561 - 565 are 1-50
+        //593 - 607 are 51-200
+        internal static uint[] DeepDungeonRawIds;
 
         #region DataAsResource
 
-        internal static Dictionary<uint, uint> Maps => SelectedDungeon.WallMapData;
+        internal static Dictionary<uint, uint> Maps;
 
-        internal static readonly uint[] TrapIds =
-        {
-            2007182,
-            2007183,
-            2007184,
-            2007185,
-            2007186,
-            2009504
-        };
+        internal static uint[] TrapIds = new uint[] {
+  2007182,
+  2007183,
+  2007184,
+  2007185,
+  2007186
+};
+
+       
 
         internal static HashSet<uint> PotionIds = new HashSet<uint>();
-        internal static Dictionary<uint, Potion> Pots { get; }
+        internal static Dictionary<uint,Potion> Pots { get; private set; }
 
-        public static bool InExitLevel => WorldManager.ZoneId == SelectedDungeon.LobbyId;
+        public static bool InExitLevel => WorldManager.ZoneId == 570;
 
         /// <summary>
-        ///     loads a json resource file
+        /// loads a json resource file
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="text"></param>
@@ -307,5 +312,30 @@ namespace DeepCombined
         }
 
         #endregion
+
+        internal static uint[] Exits = { EntityNames.FloorExit, EntityNames.BossExit, EntityNames.LobbyExit};
+
+        //2002872 = some random thing that the bot tries to target in boss rooms. actual purpose unknown
+        internal static uint[] IgnoreEntity = {5402, EntityNames.FloorExit, EntityNames.CairnofReturn, EntityNames.LobbyEntrance, 2002872, EntityNames.RubyCarby, EntityNames.EmeraldCarby, EntityNames.TopazCarby, EntityNames.Garuda, EntityNames.Titan, EntityNames.Ifrit, EntityNames.Eos, EntityNames.Selene, EntityNames.Rook, EntityNames.Bishop };
+
+        internal static uint MapVersion = 4;
+
+        internal static Language Lang;
+        //cn = 3
+        //64 = 2
+        //32 = 1
+        internal static AgentDeepDungeonSaveData GetSaveInterface()
+        {
+            return AgentModule.GetAgentInterfaceByType<AgentDeepDungeonSaveData>();
+        }
+
+        public static void INIT()
+        {
+            var field = (Language)(typeof(DataManager).GetFields(BindingFlags.Static | BindingFlags.NonPublic).First(i => i.FieldType == typeof(Language)).GetValue(null));
+
+            Lang = field;
+
+            OffsetManager.Init();
+        }
     }
 }

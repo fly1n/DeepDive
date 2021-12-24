@@ -7,27 +7,32 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
+using Deep.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using DeepCombined.Helpers.Logging;
 
-namespace DeepCombined.TaskManager
+namespace Deep.TaskManager
 {
-    internal interface ITask
+
+    interface ITask
     {
         string Name { get; }
         void Tick();
         Task<bool> Run();
     }
+        
 
 
-    internal class TaskManagerProvider : List<ITask>
+    class TaskManagerProvider : List<ITask>
     {
+        public TaskManagerProvider() { }
+
         public void Tick()
         {
-            foreach (var x in this)
+            foreach(var x in this)
             {
                 try
                 {
@@ -42,7 +47,7 @@ namespace DeepCombined.TaskManager
 
         public async Task<bool> Run()
         {
-            foreach (var x in this)
+            foreach(var x in this)
             {
                 try
                 {
@@ -55,7 +60,6 @@ namespace DeepCombined.TaskManager
                     return false;
                 }
             }
-
             return false;
         }
     }

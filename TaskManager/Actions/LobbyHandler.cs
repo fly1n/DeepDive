@@ -7,21 +7,24 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
-using System.Linq;
-using System.Threading.Tasks;
 using Buddy.Coroutines;
-using DeepCombined.Helpers;
-using DeepCombined.Helpers.Logging;
+using Deep.Logging;
 using ff14bot;
+using ff14bot.Behavior;
 using ff14bot.Managers;
 using ff14bot.Navigation;
 using ff14bot.Objects;
+using ff14bot.Pathing;
 using ff14bot.RemoteWindows;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DeepCombined.TaskManager.Actions
+namespace Deep.TaskManager.Actions
 {
-    internal class LobbyHandler : ITask
+    class LobbyHandler : ITask
     {
         private GameObject _target;
 
@@ -29,58 +32,36 @@ namespace DeepCombined.TaskManager.Actions
 
         public async Task<bool> Run()
         {
-            if (WorldManager.ZoneId != Constants.SelectedDungeon.LobbyId) return false;
-
-            await Coroutine.Sleep(5000);
-
-            _target = GameObjectManager.GameObjects.Where(r => r.NpcId == EntityNames.LobbyExit).OrderBy(r => r.Distance()).FirstOrDefault();
-
-            Navigator.Stop();
-            Navigator.Clear();
-
+            if (WorldManager.ZoneId != 570) return false;
             TreeRoot.StatusText = "Lobby Room";
-
             if (_target == null || !_target.IsValid)
             {
-                Logger.Warn("Unable to find Lobby Target");
+                Logger.Warn($"Unable to find Lobby Target");
                 return false;
             }
-
-            // move closer plz
-            if (_target.Location.Distance2D(Core.Me.Location) >= 4.4)
+            if(!Navigator.InPosition(_target.Location, Core.Me.Location, 3))
             {
-                Logger.Verbose("target range " + _target.Location.Distance2D(Core.Me.Location));
-
-                Navigator.Stop();
-                Navigator.PlayerMover.MoveStop();
-
-                Navigator.PlayerMover.MoveTowards(_target.Location);
-                while (_target.Location.Distance2D(Core.Me.Location) >= 4.4)
+                if (!await CommonTasks.MoveAndStop(new MoveToParameters(_target.Location, "Moving to Lobby Exit"), 3))
                 {
-                    Logger.Verbose("Moving towards " + _target.Location);
-                    Navigator.PlayerMover.MoveTowards(_target.Location);
-                    await Coroutine.Sleep(100);
+                    Logger.Warn("Failed to move toward the exit?");
                 }
-
-                //await Buddy.Coroutines.Coroutine.Sleep(1500); // (again, probably better to just wait until distance to destination is < 2.0f or something)
-                Navigator.PlayerMover.MoveStop();
+                return true;
             }
-
             _target.Interact();
-            await Coroutine.Wait(500, () => SelectYesno.IsOpen);
-            await Coroutine.Sleep(1000);
+            await Coroutine.Wait(250, () => SelectYesno.IsOpen);
             SelectYesno.ClickYes();
-            DeepTracker.EndRun(false);
             return true;
         }
 
         public void Tick()
         {
-            if (_target != null && !_target.IsValid) _target = null;
-            if (WorldManager.ZoneId != Constants.SelectedDungeon.LobbyId) return;
-
+            if(_target != null && !_target.IsValid)
+            {
+                _target = null;
+            }
+            if (WorldManager.ZoneId != 570) return;
             _target = GameObjectManager.GameObjects.Where(i => i.NpcId == EntityNames.LobbyExit)
-                .OrderBy(i => i.Distance2D(Core.Me.Location)).FirstOrDefault();
+                       .OrderBy(i => i.Distance2D(Core.Me.Location)).FirstOrDefault();
         }
     }
 }

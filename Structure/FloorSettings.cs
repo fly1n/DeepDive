@@ -7,24 +7,24 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System.ComponentModel;
-using DeepCombined.Properties;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using Deep.Properties;
 using Newtonsoft.Json;
 
-namespace DeepCombined.Structure
+namespace Deep.Structure
 {
     internal class FloorSetting : INotifyPropertyChanged
     {
         /// <summary>
-        ///     represents the highest level we before we reach the aether value.
+        /// represents the highest level we before we reach the aether value.
         /// </summary>
         [JsonProperty("_levelMax")]
         public int LevelMax { get; set; }
 
-        [JsonIgnore] public string Display => string.Format(Resources.UI_FloorSettingRow, LevelMax - 9, LevelMax, "");
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        [JsonIgnore]
+        public string Display => string.Format(Resources.UI_FloorSettingRow, LevelMax - 9, LevelMax, "");
 
         public override string ToString()
         {
@@ -40,5 +40,7 @@ namespace DeepCombined.Structure
         {
             return LevelMax.GetHashCode();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

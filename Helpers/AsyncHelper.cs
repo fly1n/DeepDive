@@ -7,19 +7,18 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DeepCombined.Helpers
+namespace Deep.Helpers
 {
     internal static class AsyncHelper
     {
-        private static readonly TaskFactory _myTaskFactory = new
-            TaskFactory(CancellationToken.None,
-                TaskCreationOptions.None,
-                TaskContinuationOptions.None,
+        private static readonly TaskFactory _myTaskFactory = new 
+            TaskFactory(CancellationToken.None, 
+                TaskCreationOptions.None, 
+                TaskContinuationOptions.None, 
                 TaskScheduler.Default);
 
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)

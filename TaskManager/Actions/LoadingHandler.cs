@@ -7,32 +7,33 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
-using System;
-using System.Threading.Tasks;
 using Buddy.Coroutines;
 using ff14bot;
 using ff14bot.Behavior;
-using ff14bot.Directors;
 using ff14bot.Managers;
 using ff14bot.RemoteAgents;
 using ff14bot.RemoteWindows;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ff14bot.Directors;
 
-namespace DeepCombined.TaskManager.Actions
+namespace Deep.TaskManager.Actions
 {
-    internal class LoadingHandler : ITask
+    class LoadingHandler : ITask
     {
         public string Name => "LoadingHandler";
 
         public async Task<bool> Run()
         {
-            if (CommonBehaviors.IsLoading)
+            if(CommonBehaviors.IsLoading)
             {
                 await Coroutine.Wait(-1, () => !CommonBehaviors.IsLoading);
                 return true;
             }
-
-            if (QuestLogManager.InCutscene)
+            if(QuestLogManager.InCutscene)
             {
                 TreeRoot.StatusText = "InCutscene";
                 if (AgentCutScene.Instance != null)
@@ -53,14 +54,19 @@ namespace DeepCombined.TaskManager.Actions
 
             //wait if the barrier is still up
             if (DirectorManager.ActiveDirector is InstanceContentDirector activeAsInstance)
-                if (activeAsInstance.TimeLeftInDungeon == TimeSpan.Zero)
+            {
+                if (activeAsInstance.TimeLeftInDungeon == TimeSpan.Zero || activeAsInstance.TimeLeftInDungeon > TimeSpan.FromHours(1))
+                {
                     return true;
+                }
+            }
 
             return false;
         }
 
         public void Tick()
         {
+            
         }
     }
 }

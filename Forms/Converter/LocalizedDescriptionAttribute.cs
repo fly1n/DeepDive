@@ -7,36 +7,43 @@ work. If not, see <http://creativecommons.org/licenses/by-nc-sa/4.0/>.
 
 Orginal work done by zzi, contibutions by Omninewb, Freiheit, and mastahg
                                                                                  */
-
 using System.ComponentModel;
-using DeepCombined.Properties;
+using Deep.Properties;
 
-namespace DeepCombined.Forms.Converter
+namespace Deep.Forms.Converter
 {
     public class LocalizedDescriptionAttribute : DescriptionAttribute
     {
+        #region Fields
+
+        private string resourceName;
+
+        #endregion
+
         #region Constructors
 
         public LocalizedDescriptionAttribute(string resourceName)
         {
-            ResourceName = resourceName;
+            this.resourceName = resourceName;
         }
 
         #endregion
 
         #region DescriptionAttribute Members
 
-        public override string Description => Resources.ResourceManager.GetString(ResourceName);
+        public override string Description
+        {
+            get { return Resources.ResourceManager.GetString(resourceName); }
+        }
 
         #endregion
 
         #region Properties
 
-        public string ResourceName { get; }
-
-        #endregion
-
-        #region Fields
+        public string ResourceName
+        {
+            get { return resourceName; }
+        }
 
         #endregion
     }
